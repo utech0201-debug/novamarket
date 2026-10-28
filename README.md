@@ -1,8 +1,8 @@
-# Atelier — Full-Stack E-Commerce Store
+# YBG Garments — Fashion Store
 
-A modern, full-stack fashion storefront built with **Next.js 14 (App Router)**, **Supabase**, and **Stripe**. It features a polished shopping experience, real authentication, a database-backed catalog, working test-mode checkout, and a complete admin dashboard.
+YBG Garments is a modern fashion storefront built with **Next.js 14 (App Router)**, **Supabase**, and **Stripe**. It includes product browsing, customer accounts, a database-backed catalog, Stripe Checkout, order history, and an admin dashboard.
 
-> Demo project by [Tahir Mehmood](https://tahirmehmood-dev.vercel.app) — React & React Native developer.
+> This project is adapted from the public starter by [Tahir Mehmood](https://tahirmehmood-dev.vercel.app).
 
 ## ✨ Features
 
@@ -108,7 +108,7 @@ supabase/             # schema.sql, orders.sql
 
 ## 📝 Notes
 
-- The app **degrades gracefully**: with no Supabase/Stripe keys it still runs on a static demo catalog, so it never hard-crashes mid-setup.
+- The storefront uses a sample catalog until Supabase is configured; Stripe checkout stays disabled until payment keys are configured.
 - All prices are **re-validated server-side** at checkout.
 - The Supabase **secret/service_role key is used only server-side** and is never exposed to the browser.
 
