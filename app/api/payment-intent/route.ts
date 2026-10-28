@@ -7,7 +7,6 @@ import { createAdminClient } from "@/lib/supabase/admin";
 type IncomingItem = { id: string; quantity: number };
 
 // Creates a Stripe PaymentIntent for the native (mobile) PaymentSheet flow.
-// Mirrors /api/checkout but returns a client secret instead of a hosted URL.
 // Prices are re-validated server-side so the client can't tamper with amounts.
 export async function POST(request: NextRequest) {
   if (!stripe) {
@@ -17,20 +16,30 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  let body: { items?: IncomingItem[] };
+  let body: unknown;
   try {
     body = await request.json();
   } catch {
     return NextResponse.json({ error: "Invalid request body." }, { status: 400 });
   }
 
-  const items = body.items ?? [];
-  if (items.length === 0) {
-    return NextResponse.json({ error: "Cart is empty." }, { status: 400 });
+  if (
+    !body ||
+    typeof body !== "object" ||
+    !Array.isArray((body as { items?: unknown }).items)
+  ) {
+    return NextResponse.json({ error: "Cart is empty or invalid." }, { status: 400 });
   }
 
-  // Identify the signed-in user from the bearer token (sent by the app), so the
-  // order links to their account. Never trust a client-supplied user id.
+  const items = (body as { items: unknown[] }).items;
+  if (items.length === 0 || items.length > 100) {
+    return NextResponse.json(
+      { error: "Cart must contain between 1 and 100 items." },
+      { status: 400 }
+    );
+  }
+
+  // Identify the signed-in user from the bearer token; never trust a client ID.
   let userId = "";
   const authHeader = request.headers.get("authorization");
   if (authHeader?.startsWith("Bearer ")) {
@@ -41,25 +50,61 @@ export async function POST(request: NextRequest) {
     }
   }
 
-  // Validate against real catalog prices and compute the authoritative total.
   const catalog = await getProducts();
-  const byId = new Map(catalog.map((p) => [p.id, p]));
-
+  const byId = new Map(catalog.map((product) => [product.id, product]));
   let amount = 0;
   const compactCart: { id: string; q: number }[] = [];
-  for (const item of items) {
+
+  for (const rawItem of items) {
+    if (!rawItem || typeof rawItem !== "object") {
+      return NextResponse.json({ error: "Invalid cart item." }, { status: 400 });
+    }
+
+    const item = rawItem as Partial<IncomingItem>;
+    if (
+      typeof item.id !== "string" ||
+      !item.id.trim() ||
+      !Number.isInteger(item.quantity) ||
+      (item.quantity as number) < 1 ||
+      (item.quantity as number) > 99
+    ) {
+      return NextResponse.json(
+        { error: "Each item needs a valid product and quantity (1–99)." },
+        { status: 400 }
+      );
+    }
+
     const product = byId.get(item.id);
-    if (!product) continue;
-    const quantity = Math.max(1, Math.min(99, Math.floor(item.quantity)));
-    amount += Math.round(product.price * 100) * quantity;
+    if (!product) {
+      return NextResponse.json(
+        { error: "One or more products are no longer available." },
+        { status: 400 }
+      );
+    }
+
+    const quantity = item.quantity as number;
+    const unitAmount = Math.round(product.price * 100);
+    if (!Number.isSafeInteger(unitAmount) || unitAmount <= 0) {
+      return NextResponse.json(
+        { error: "A product has an invalid price." },
+        { status: 400 }
+      );
+    }
+
+    amount += unitAmount * quantity;
+    // Stripe's supported maximum for a USD PaymentIntent is 99,999,999 cents.
+    if (!Number.isSafeInteger(amount) || amount > 99_999_999) {
+      return NextResponse.json(
+        { error: "Cart total exceeds the payment limit." },
+        { status: 400 }
+      );
+    }
+
     compactCart.push({ id: product.id, q: quantity });
   }
 
   if (amount <= 0 || compactCart.length === 0) {
-    return NextResponse.json(
-      { error: "No valid items to checkout." },
-      { status: 400 }
-    );
+    return NextResponse.json({ error: "No valid items to checkout." }, { status: 400 });
   }
 
   try {
@@ -79,8 +124,10 @@ export async function POST(request: NextRequest) {
       amount,
     });
   } catch (err) {
-    const message =
-      err instanceof Error ? err.message : "Failed to create payment intent.";
-    return NextResponse.json({ error: message }, { status: 500 });
+    console.error("Stripe PaymentIntent creation failed", err);
+    return NextResponse.json(
+      { error: "Unable to start payment. Please try again." },
+      { status: 502 }
+    );
   }
 }

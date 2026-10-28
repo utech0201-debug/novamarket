@@ -1,6 +1,6 @@
 # YBG Garments — Fashion Store
 
-YBG Garments is a modern fashion storefront built with **Next.js 14 (App Router)**, **Supabase**, and **Stripe**. It includes product browsing, customer accounts, a database-backed catalog, Stripe Checkout, order history, and an admin dashboard.
+YBG Garments is a modern fashion storefront built with **Next.js 15 (App Router)**, **React 19**, **Supabase**, and **Stripe**. It includes product browsing, customer accounts, a database-backed catalog, Stripe Checkout, order history, and an admin dashboard.
 
 > This project is adapted from the public starter by [Tahir Mehmood](https://tahirmehmood-dev.vercel.app).
 
@@ -9,19 +9,19 @@ YBG Garments is a modern fashion storefront built with **Next.js 14 (App Router)
 - **Storefront** — hero, category browsing, search, sorting, product detail pages, and a persistent cart (localStorage).
 - **Authentication** — email/password sign up & sign in via Supabase Auth, protected account pages.
 - **Database-backed catalog** — products served from Supabase Postgres with Row Level Security; gracefully falls back to a static demo catalog when not configured.
-- **Checkout** — Stripe Checkout (test mode) with server-side price validation so amounts can't be tampered with.
-- **Orders** — paid orders recorded server-side via a Stripe webhook + an idempotent success-page confirm. Customers see their orders; admins see all.
+- **Checkout** — Stripe Checkout and a native PaymentIntent endpoint, with server-side price validation so client-supplied amounts cannot be trusted.
+- **Orders** — paid orders recorded server-side via a Stripe webhook and an idempotent success-page confirmation. Customers see their own orders; admins see all.
 - **Admin panel** — role-gated (`is_admin`) dashboard to create / edit / delete products and view orders.
 
 ## 🛠 Tech Stack
 
 | Area | Tech |
 |------|------|
-| Framework | Next.js 14 (App Router, Server Components, Server Actions) |
+| Framework | Next.js 15 (App Router, Server Components, Server Actions) |
 | Language | TypeScript |
 | Styling | Tailwind CSS |
 | Database & Auth | Supabase (Postgres + Auth + RLS) |
-| Payments | Stripe Checkout |
+| Payments | Stripe Checkout + PaymentIntents |
 | UI niceties | Framer Motion, react-hot-toast, react-icons |
 
 ## 🚀 Getting Started
@@ -29,7 +29,7 @@ YBG Garments is a modern fashion storefront built with **Next.js 14 (App Router)
 ### 1. Install
 
 ```bash
-npm install
+npm ci
 ```
 
 ### 2. Configure environment
@@ -88,15 +88,16 @@ Copy the `whsec_...` it prints into `STRIPE_WEBHOOK_SECRET`.
 
 ```
 app/
-  (storefront)        # home, products, product detail, cart, checkout
   account/            # protected account + order history
   admin/              # role-gated dashboard, product CRUD, orders
-  api/                # checkout, orders/confirm, webhooks/stripe
+  api/                # checkout, orders/confirm, webhooks/stripe, payment-intent
+  auth/callback/      # Supabase auth callback
+  cart/ checkout/     # shopping cart and checkout
   login/ signup/      # auth pages
-components/           # Navbar, Footer, ProductCard
-context/              # CartContext, AuthContext
-lib/                  # supabase clients, stripe, data layer, orders
-supabase/             # schema.sql, orders.sql
+components/            # Navbar, Footer, ProductCard
+context/               # CartContext, AuthContext
+lib/                   # Supabase clients, Stripe, data layer
+supabase/              # schema.sql, orders.sql, migrations
 ```
 
 ## ☁️ Deployment (Vercel)
@@ -104,13 +105,14 @@ supabase/             # schema.sql, orders.sql
 1. Push this repo to GitHub.
 2. Import it on [Vercel](https://vercel.com/new).
 3. Add all environment variables from `.env.local` to the Vercel project settings, and set `NEXT_PUBLIC_SITE_URL` to your deployed URL.
-4. (Optional) Add a Stripe webhook endpoint in the Stripe dashboard pointing to `https://your-app.vercel.app/api/webhooks/stripe` and set `STRIPE_WEBHOOK_SECRET`.
+4. Add a Stripe webhook endpoint in the Stripe dashboard pointing to `https://your-app.vercel.app/api/webhooks/stripe` and set `STRIPE_WEBHOOK_SECRET`.
 
 ## 📝 Notes
 
 - The storefront uses a sample catalog until Supabase is configured; Stripe checkout stays disabled until payment keys are configured.
-- All prices are **re-validated server-side** at checkout.
-- The Supabase **secret/service_role key is used only server-side** and is never exposed to the browser.
+- All payment amounts are re-validated server-side.
+- The Supabase secret/service-role key is server-only and must never be exposed to the browser.
+- This branch uses Next.js 15.5.28, the patched Next.js 15 release line as of October 2026. Review the current framework support lifecycle before planning future upgrades.
 
 ## License
 
