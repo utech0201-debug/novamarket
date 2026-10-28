@@ -27,15 +27,22 @@ export default async function ProductDetailPage({
 
       <div className="mt-6 grid gap-8 md:mt-9 md:grid-cols-2 md:gap-12 lg:gap-16">
         <div className="relative aspect-[4/5] overflow-hidden bg-[#f0f0ed]">
-          <Image
-            src={product.image}
-            alt={product.name}
-            fill
-            priority
-            sizes="(max-width: 768px) 100vw, 50vw"
-            className="object-cover"
-            quality={80}
-          />
+          {product.image ? (
+            <Image
+              src={product.image}
+              alt={product.name}
+              fill
+              priority
+              sizes="(max-width: 768px) 100vw, 50vw"
+              className="object-cover"
+              quality={80}
+            />
+          ) : (
+            <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 bg-[#f0f0ed] text-black/40">
+              <span className="font-serif text-6xl" aria-hidden="true">YBG</span>
+              <span className="text-[10px] font-semibold uppercase tracking-[0.2em]">Product image coming soon</span>
+            </div>
+          )}
           <div className="pointer-events-none absolute left-4 top-4 border border-white/70 bg-white/90 px-3 py-2 text-[9px] font-semibold uppercase tracking-[0.18em] text-ink">
             YBG selection
           </div>
