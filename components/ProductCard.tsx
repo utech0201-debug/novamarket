@@ -18,14 +18,21 @@ export default function ProductCard({ product }: { product: Product }) {
   return (
     <Link href={`/products/${product.id}`} className="group block">
       <div className="relative aspect-[3/4] overflow-hidden bg-[#f0f0ed]">
-        <Image
-          src={product.image}
-          alt={product.name}
-          fill
-          sizes="(max-width: 768px) 50vw, 25vw"
-          className="object-cover transition-transform duration-700 group-hover:scale-[1.04]"
-          quality={75}
-        />
+        {product.image ? (
+          <Image
+            src={product.image}
+            alt={product.name}
+            fill
+            sizes="(max-width: 768px) 50vw, 25vw"
+            className="object-cover transition-transform duration-700 group-hover:scale-[1.04]"
+            quality={75}
+          />
+        ) : (
+          <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-[#f0f0ed] text-black/40">
+            <span className="font-serif text-4xl" aria-hidden="true">YBG</span>
+            <span className="text-[9px] font-semibold uppercase tracking-[0.2em]">Image coming soon</span>
+          </div>
+        )}
         <div className="pointer-events-none absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-black/20 to-transparent opacity-70" />
         <button
           onClick={handleAdd}
