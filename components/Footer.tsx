@@ -5,10 +5,9 @@ export default function Footer() {
     <footer className="border-t border-ink/10 bg-sand">
       <div className="container-x grid gap-8 py-12 md:grid-cols-4">
         <div>
-          <h3 className="font-serif text-xl font-bold">Atelier</h3>
+          <h3 className="font-serif text-xl font-bold">YBG Garments</h3>
           <p className="mt-2 text-sm text-ink/60">
-            Curated modern fashion. A demo store built with Next.js, Supabase &
-            Stripe.
+            Thoughtfully selected styles for everyday confidence.
           </p>
         </div>
         <div>
@@ -60,7 +59,7 @@ export default function Footer() {
         </div>
       </div>
       <div className="container-x border-t border-ink/10 py-6 text-center text-xs text-ink/50">
-        © {new Date().getFullYear()} Atelier. Demo project by Tahir Mehmood.
+        © {new Date().getFullYear()} YBG Garments. All rights reserved.
       </div>
     </footer>
   );

@@ -17,8 +17,10 @@ export default async function HomePage() {
           src="https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=1600&q=80"
           alt="Fashion editorial"
           fill
+          sizes="100vw"
           priority
           className="object-cover"
+          quality={70}
         />
         <div className="absolute inset-0 bg-ink/40" />
         <div className="container-x relative flex h-full flex-col items-start justify-center text-cream">
@@ -61,6 +63,7 @@ export default async function HomePage() {
                   fill
                   sizes="(max-width: 768px) 100vw, 33vw"
                   className="object-cover transition-transform duration-500 group-hover:scale-105"
+                  quality={70}
                 />
                 <div className="absolute inset-0 bg-ink/30" />
                 <span className="relative font-serif text-2xl font-bold text-cream">

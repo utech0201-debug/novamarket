@@ -13,7 +13,7 @@ export default function Navbar() {
     <header className="sticky top-0 z-50 border-b border-ink/10 bg-cream/80 backdrop-blur-md">
       <div className="container-x flex h-16 items-center justify-between">
         <Link href="/" className="font-serif text-2xl font-bold tracking-tight">
-          Atelier
+          YBG Garments
         </Link>
 
         <nav className="hidden items-center gap-8 text-sm md:flex">

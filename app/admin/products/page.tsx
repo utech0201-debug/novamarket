@@ -42,6 +42,7 @@ export default async function AdminProductsPage() {
                           fill
                           sizes="48px"
                           className="object-cover"
+                          quality={70}
                         />
                       )}
                     </div>

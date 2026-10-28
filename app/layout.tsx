@@ -14,9 +14,9 @@ const playfair = Playfair_Display({
 });
 
 export const metadata: Metadata = {
-  title: "Atelier — Modern Fashion Store",
+  title: "YBG Garments — Modern Fashion Store",
   description:
-    "A curated fashion store built with Next.js, Supabase, and Stripe. Demo project by Tahir Mehmood.",
+    "Discover thoughtfully selected fashion and everyday essentials at YBG Garments.",
 };
 
 export default function RootLayout({
