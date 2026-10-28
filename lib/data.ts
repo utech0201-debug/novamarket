@@ -35,7 +35,9 @@ export async function getProducts(): Promise<Product[]> {
     .select("*")
     .order("created_at", { ascending: true });
 
-  if (error || !data || data.length === 0) return fallbackProducts;
+  // Use the demo catalog only when Supabase is not configured. If a configured
+  // database errors or contains no products, do not silently sell demo items.
+  if (error || !data) return [];
   return (data as ProductRow[]).map(mapRow);
 }
 
@@ -55,7 +57,7 @@ export async function getProductById(id: string): Promise<Product | null> {
     .eq("id", id)
     .maybeSingle();
 
-  if (error || !data) return fallbackProducts.find((p) => p.id === id) ?? null;
+  if (error || !data) return null;
   return mapRow(data as ProductRow);
 }
 
