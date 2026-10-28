@@ -39,7 +39,7 @@ export default function LoginPage() {
     <div className="container-x flex justify-center py-20">
       <div className="w-full max-w-md">
         <h1 className="font-serif text-4xl font-bold">Sign in</h1>
-        <p className="mt-2 text-ink/60">Welcome back to Atelier.</p>
+        <p className="mt-2 text-ink/60">Welcome back to YBG Garments.</p>
 
         {!supabase && (
           <p className="mt-6 rounded-xl bg-sand p-4 text-sm text-ink/70">
