@@ -104,11 +104,23 @@ export default async function HomePage() {
               View all <span aria-hidden="true">↗</span>
             </Link>
           </div>
-          <div className="grid grid-cols-2 gap-x-4 gap-y-9 sm:gap-x-6 md:grid-cols-4">
-            {featured.map((product) => (
-              <ProductCard key={product.id} product={product} />
-            ))}
-          </div>
+          {featured.length > 0 ? (
+            <div className="grid grid-cols-2 gap-x-4 gap-y-9 sm:gap-x-6 md:grid-cols-4">
+              {featured.map((product) => (
+                <ProductCard key={product.id} product={product} />
+              ))}
+            </div>
+          ) : (
+            <div className="border border-dashed border-black/15 px-6 py-12 text-center sm:py-16">
+              <p className="font-serif text-2xl sm:text-3xl">Our first collection is coming soon.</p>
+              <p className="mx-auto mt-3 max-w-md text-sm leading-6 text-black/55">
+                We’re preparing the pieces for our store. Check back soon to explore the YBG Garments collection.
+              </p>
+              <Link href="/products" className="btn-primary mt-6 inline-flex">
+                Explore the store
+              </Link>
+            </div>
+          )}
         </div>
       </section>
 
