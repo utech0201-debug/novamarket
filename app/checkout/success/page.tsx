@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense, useEffect, useRef, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { FiCheckCircle, FiClock, FiAlertCircle } from "react-icons/fi";
@@ -12,15 +12,11 @@ function SuccessContent() {
   const { clearCart } = useCart();
   const searchParams = useSearchParams();
   const sessionId = searchParams.get("session_id");
-  const handled = useRef(false);
   const [verification, setVerification] = useState<VerificationState>(
     sessionId ? "checking" : "missing"
   );
 
   useEffect(() => {
-    if (handled.current) return;
-    handled.current = true;
-
     if (!sessionId) {
       setVerification("missing");
       return;
