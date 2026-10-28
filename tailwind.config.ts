@@ -9,11 +9,16 @@ const config: Config = {
     extend: {
       colors: {
         ink: "#111111",
-        cream: "#faf9f7",
-        sand: "#f0ede8",
+        cream: "#ffffff",
+        sand: "#f5f5f3",
         accent: {
-          DEFAULT: "#c2410c",
-          dark: "#9a3412",
+          DEFAULT: "#b99a55",
+          dark: "#92763b",
+        },
+        gold: {
+          DEFAULT: "#b99a55",
+          light: "#d8c28b",
+          dark: "#92763b",
         },
       },
       fontFamily: {

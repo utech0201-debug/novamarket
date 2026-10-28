@@ -2,64 +2,55 @@ import Link from "next/link";
 
 export default function Footer() {
   return (
-    <footer className="border-t border-ink/10 bg-sand">
-      <div className="container-x grid gap-8 py-12 md:grid-cols-4">
-        <div>
-          <h3 className="font-serif text-xl font-bold">YBG Garments</h3>
-          <p className="mt-2 text-sm text-ink/60">
-            Thoughtfully selected styles for everyday confidence.
+    <footer className="bg-ink text-white">
+      <div className="container-x grid gap-10 py-14 sm:grid-cols-2 md:grid-cols-4 md:py-16">
+        <div className="sm:col-span-2 md:col-span-1">
+          <Link href="/" className="inline-block font-serif text-2xl font-semibold tracking-[0.06em]">
+            YBG <span className="text-gold">GARMENTS</span>
+          </Link>
+          <p className="mt-4 max-w-xs text-sm leading-6 text-white/60">
+            Thoughtfully selected styles for everyday confidence. Find pieces that feel like you.
           </p>
         </div>
         <div>
-          <h4 className="mb-3 text-sm font-semibold">Shop</h4>
-          <ul className="space-y-2 text-sm text-ink/60">
-            <li>
-              <Link href="/products?category=Men" className="hover:text-accent">
-                Men
-              </Link>
-            </li>
-            <li>
-              <Link href="/products?category=Women" className="hover:text-accent">
-                Women
-              </Link>
-            </li>
-            <li>
-              <Link
-                href="/products?category=Accessories"
-                className="hover:text-accent"
-              >
-                Accessories
-              </Link>
-            </li>
+          <h4 className="mb-4 text-[10px] font-semibold uppercase tracking-[0.22em] text-gold">Explore</h4>
+          <ul className="space-y-3 text-sm text-white/65">
+            <li><Link href="/products" className="transition-colors hover:text-gold-light">Shop all</Link></li>
+            <li><Link href="/products?category=Men" className="transition-colors hover:text-gold-light">Men</Link></li>
+            <li><Link href="/products?category=Women" className="transition-colors hover:text-gold-light">Women</Link></li>
+            <li><Link href="/products?category=Accessories" className="transition-colors hover:text-gold-light">Accessories</Link></li>
           </ul>
         </div>
         <div>
-          <h4 className="mb-3 text-sm font-semibold">Help</h4>
-          <ul className="space-y-2 text-sm text-ink/60">
+          <h4 className="mb-4 text-[10px] font-semibold uppercase tracking-[0.22em] text-gold">Customer care</h4>
+          <ul className="space-y-3 text-sm text-white/65">
             <li>Shipping &amp; Returns</li>
             <li>Size Guide</li>
             <li>Contact Us</li>
           </ul>
         </div>
         <div>
-          <h4 className="mb-3 text-sm font-semibold">Newsletter</h4>
-          <p className="text-sm text-ink/60">
-            Subscribe for new arrivals and offers.
-          </p>
-          <div className="mt-3 flex">
+          <h4 className="mb-4 text-[10px] font-semibold uppercase tracking-[0.22em] text-gold">Stay in the know</h4>
+          <p className="text-sm leading-6 text-white/60">Hear about new arrivals and considered edits.</p>
+          <form action="/newsletter" method="post" className="mt-4 flex border-b border-white/25 pb-2 focus-within:border-gold">
             <input
               type="email"
-              placeholder="Email"
-              className="w-full rounded-l-full border border-ink/20 bg-cream px-4 py-2 text-sm outline-none focus:border-ink"
+              name="email"
+              placeholder="Your email address"
+              aria-label="Your email address"
+              className="min-w-0 flex-1 bg-transparent py-2 text-sm text-white outline-none placeholder:text-white/40"
             />
-            <button className="rounded-r-full bg-ink px-4 py-2 text-sm text-cream hover:bg-accent">
-              Join
+            <button type="submit" className="px-2 text-xs font-semibold uppercase tracking-wider text-gold transition-colors hover:text-gold-light">
+              Join ↗
             </button>
-          </div>
+          </form>
         </div>
       </div>
-      <div className="container-x border-t border-ink/10 py-6 text-center text-xs text-ink/50">
-        © {new Date().getFullYear()} YBG Garments. All rights reserved.
+      <div className="border-t border-white/10">
+        <div className="container-x flex flex-col gap-2 py-5 text-[10px] uppercase tracking-[0.12em] text-white/40 sm:flex-row sm:items-center sm:justify-between">
+          <span>© {new Date().getFullYear()} YBG Garments. All rights reserved.</span>
+          <span>Designed with intention <span className="text-gold">✦</span></span>
+        </div>
       </div>
     </footer>
   );
