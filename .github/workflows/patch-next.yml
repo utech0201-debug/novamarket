@@ -1,14 +1,17 @@
-name: Verify patched Next.js (manual only)
+name: Verify patched dependencies
 
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - hardening/admin-checkout-guards
 
 permissions:
   contents: write
 
 jobs:
   regenerate-and-verify:
-    name: Regenerate lockfile, lint, and build
+    name: Remediate lockfile, audit, lint, and build
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
@@ -19,10 +22,12 @@ jobs:
         with:
           node-version: 20
           cache: npm
-      - name: Regenerate package lock
-        run: npm install --package-lock-only --ignore-scripts --no-audit --no-fund
+      - name: Update vulnerable lockfile dependencies
+        run: npm audit fix --package-lock-only --ignore-scripts --no-fund
       - name: Install locked dependencies
         run: npm ci --no-audit --no-fund
+      - name: Audit production dependencies
+        run: npm audit --omit=dev --audit-level=high
       - name: Lint
         run: npm run lint
       - name: Build
@@ -36,5 +41,5 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add package-lock.json
-          git commit -m "chore: regenerate lockfile for patched Next.js"
+          git commit -m "chore: remediate vulnerable dependency lockfile"
           git push
