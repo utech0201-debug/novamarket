@@ -3,7 +3,8 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useCart } from "@/context/CartContext";
-import { formatPrice } from "@/lib/products";
+import { formatPrice, products } from "@/lib/products";
+import ProductCard from "@/components/ProductCard";
 import { FiTrash2 } from "react-icons/fi";
 
 export default function CartPage() {
@@ -21,6 +22,9 @@ export default function CartPage() {
   }
 
   const shipping = totalPrice > 150 ? 0 : 9.99;
+  const recommendedProducts = products
+    .filter((product) => !items.some((item) => item.id === product.id))
+    .slice(0, 4);
 
   return (
     <main className="container-x py-10 sm:py-14">
@@ -77,6 +81,24 @@ export default function CartPage() {
           <p className="mt-4 text-center text-xs leading-5 text-ink/50">Shipping and return terms are confirmed during checkout.</p>
         </aside>
       </div>
+
+      {recommendedProducts.length > 0 && (
+        <section className="mt-20 border-t border-ink/10 pt-12 sm:mt-24 sm:pt-16" aria-labelledby="you-might-like-heading">
+          <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-[0.25em] text-gold">Picked for you</p>
+              <h2 id="you-might-like-heading" className="mt-3 font-serif text-3xl font-medium tracking-tight sm:text-4xl">You might also like</h2>
+              <p className="mt-2 text-sm text-ink/60">A few more pieces worth discovering.</p>
+            </div>
+            <Link href="/products" className="text-xs font-semibold uppercase tracking-[0.15em] underline decoration-gold/70 underline-offset-4 transition hover:text-gold">Shop all</Link>
+          </div>
+          <div className="grid grid-cols-2 gap-x-4 gap-y-9 sm:gap-x-6 lg:grid-cols-4">
+            {recommendedProducts.map((product) => (
+              <ProductCard key={product.id} product={product} />
+            ))}
+          </div>
+        </section>
+      )}
     </main>
   );
 }
