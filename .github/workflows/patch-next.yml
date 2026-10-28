@@ -1,9 +1,7 @@
-name: Patch Next.js and verify lockfile
+name: Verify patched Next.js (manual only)
 
 on:
-  push:
-    branches:
-      - security/next-15-patch
+  workflow_dispatch:
 
 permissions:
   contents: write
