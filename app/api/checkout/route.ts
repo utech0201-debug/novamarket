@@ -80,7 +80,7 @@ export async function POST(request: NextRequest) {
   const origin = process.env.NEXT_PUBLIC_SITE_URL ?? request.nextUrl.origin;
 
   // Link the order to the signed-in user (if any) so it shows in their account.
-  const supabase = createClient();
+  const supabase = await createClient();
   let userId: string | undefined;
   if (supabase) {
     const {
