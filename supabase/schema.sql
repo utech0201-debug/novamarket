@@ -130,3 +130,11 @@ on conflict do nothing;
 -- After you sign up in the app, run this once with your email:
 --   update public.profiles set is_admin = true
 --   where id = (select id from auth.users where email = 'you@example.com');
+
+-- ----------------------------------------------------------------------------
+-- SECURITY: prevent users from promoting themselves to admin.
+-- Row-level policies restrict which profile row is writable, but do not restrict
+-- which columns on that row can be changed. Only full_name is user-editable.
+-- ----------------------------------------------------------------------------
+revoke update on table public.profiles from public, anon, authenticated;
+grant update (full_name) on table public.profiles to authenticated;
