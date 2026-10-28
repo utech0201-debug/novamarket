@@ -4,10 +4,10 @@ import { SUPABASE_URL, SUPABASE_ANON_KEY, isSupabaseConfigured } from "./config"
 
 // Server-side Supabase client wired to Next.js cookies. Returns null when keys
 // aren't configured so server components/route handlers can fall back safely.
-export function createClient() {
+export async function createClient() {
   if (!isSupabaseConfigured) return null;
 
-  const cookieStore = cookies();
+  const cookieStore = await cookies();
 
   return createServerClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
     cookies: {
