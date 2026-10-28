@@ -21,7 +21,7 @@ export async function createProduct(
   _prev: ActionState,
   formData: FormData
 ): Promise<ActionState> {
-  const supabase = createClient();
+  const supabase = await createClient();
   if (!supabase) return { error: "Database not configured." };
 
   const values = parseForm(formData);
@@ -41,7 +41,7 @@ export async function updateProduct(
   _prev: ActionState,
   formData: FormData
 ): Promise<ActionState> {
-  const supabase = createClient();
+  const supabase = await createClient();
   if (!supabase) return { error: "Database not configured." };
 
   const id = String(formData.get("id") ?? "");
@@ -62,7 +62,7 @@ export async function updateProduct(
 }
 
 export async function deleteProduct(formData: FormData): Promise<void> {
-  const supabase = createClient();
+  const supabase = await createClient();
   if (!supabase) return;
 
   const id = String(formData.get("id") ?? "");

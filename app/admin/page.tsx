@@ -5,7 +5,7 @@ import { formatPrice } from "@/lib/products";
 export const dynamic = "force-dynamic";
 
 export default async function AdminDashboard() {
-  const supabase = createClient();
+  const supabase = await createClient();
 
   let productCount = 0;
   let orderCount = 0;

@@ -27,7 +27,7 @@ function mapRow(row: ProductRow): Product {
 
 // All products. Reads from Supabase when configured, otherwise the demo catalog.
 export async function getProducts(): Promise<Product[]> {
-  const supabase = createClient();
+  const supabase = await createClient();
   if (!supabase) return fallbackProducts;
 
   const { data, error } = await supabase
@@ -48,7 +48,7 @@ export async function getFeaturedProducts(): Promise<Product[]> {
 }
 
 export async function getProductById(id: string): Promise<Product | null> {
-  const supabase = createClient();
+  const supabase = await createClient();
   if (!supabase) return fallbackProducts.find((p) => p.id === id) ?? null;
 
   const { data, error } = await supabase
