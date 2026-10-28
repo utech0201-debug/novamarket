@@ -68,7 +68,7 @@ export default function LoginPage() {
       const { error: oauthError } = await supabase.auth.signInWithOAuth({
         provider,
         options: {
-          redirectTo: \`\${window.location.origin}/auth/callback?next=/account\`,
+          redirectTo: `${window.location.origin}/auth/callback?next=/account`,
         },
       });
       if (oauthError) setError(oauthError.message);
@@ -97,11 +97,11 @@ export default function LoginPage() {
             {Array.from({ length: 7 }, (_, index) => (
               <path
                 key={index}
-                d={\`M-60 \${40 + index * 22} C 140 \${-20 + index * 22}, 300 \${100 + index * 22}, 450 \${40 + index * 22} S 760 \${-20 + index * 22}, 860 \${40 + index * 22}\`}
+                d={`M-60 ${40 + index * 22} C 140 ${-20 + index * 22}, 300 ${100 + index * 22}, 450 ${40 + index * 22} S 760 ${-20 + index * 22}, 860 ${40 + index * 22}`}
                 strokeWidth="1"
                 opacity={0.9 - index * 0.1}
                 className="y-fold"
-                style={{ animationDelay: \`-\${index * 1.1}s\` }}
+                style={{ animationDelay: `-${index * 1.1}s` }}
               />
             ))}
           </g>
@@ -211,7 +211,7 @@ export default function LoginPage() {
   );
 }
 
-const styles = \`
+const styles = `
 .y-login{--y-gold:#b8985a;--y-gold-dark:#8a6d33;--y-muted:#666;min-height:100svh;display:grid;grid-template-columns:1.1fr 1fr;gap:14px;padding:14px;background:#050505;color:#111;font-family:Arial,Helvetica,sans-serif}
 .y-login *{box-sizing:border-box}
 .y-brand{position:relative;min-height:680px;overflow:hidden;border:1px solid rgba(184,152,90,.28);border-radius:30px;background:#090909;display:flex;align-items:center;justify-content:center;padding:64px 36px}
@@ -278,4 +278,4 @@ const styles = \`
 @media(max-width:900px){.y-login{grid-template-columns:1fr;padding:10px;gap:10px}.y-brand{min-height:360px;padding:90px 24px 56px;border-radius:25px}.y-panel{border-radius:25px;padding:38px 25px}.y-badge{top:28px}.y-frame{inset:12px;border-radius:16px}.y-corner{width:30px;height:30px}.y-monogram{font-size:96px}.y-rule{margin:18px auto 16px}.y-tagline{display:none}.y-seal{width:340px;top:50%}.y-silk{height:55%}.y-form h1{font-size:37px}}
 @media(max-width:380px){.y-panel{padding:32px 18px}.y-social{gap:8px}.y-brand-name{font-size:12px}}
 @media(prefers-reduced-motion:reduce){.y-brand-center,.y-seal svg,.y-fold,.y-monogram{animation:none}.y-login *{transition:none!important}}
-\`;
+`;
