@@ -5,6 +5,7 @@ import { getProducts } from "@/lib/data";
 import { createClient } from "@/lib/supabase/server";
 
 type IncomingItem = { id: string; quantity: number };
+const MAX_CART_SUBTOTAL_CENTS = 99_998_999;
 
 export async function POST(request: NextRequest) {
   if (!stripe) {
@@ -14,37 +15,47 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  let body: { items?: IncomingItem[] };
+  let body: unknown;
   try {
     body = await request.json();
   } catch {
     return NextResponse.json({ error: "Invalid request body." }, { status: 400 });
   }
 
-  if (!Array.isArray(body.items) || body.items.length === 0) {
+  if (
+    !body ||
+    typeof body !== "object" ||
+    !Array.isArray((body as { items?: unknown }).items)
+  ) {
     return NextResponse.json({ error: "Cart is empty or invalid." }, { status: 400 });
   }
 
-  // Stripe Checkout supports up to 100 line items in payment mode.
-  if (body.items.length > 100) {
-    return NextResponse.json({ error: "Cart has too many items." }, { status: 400 });
+  const items = (body as { items: unknown[] }).items;
+  if (items.length === 0 || items.length > 100) {
+    return NextResponse.json(
+      { error: "Cart must contain between 1 and 100 items." },
+      { status: 400 }
+    );
   }
 
   // Re-fetch real prices server-side so the client can't tamper with amounts.
   const catalog = await getProducts();
   const byId = new Map(catalog.map((product) => [product.id, product]));
-
   const lineItems: Stripe.Checkout.SessionCreateParams.LineItem[] = [];
   let subtotalCents = 0;
 
-  for (const item of body.items) {
+  for (const rawItem of items) {
+    if (!rawItem || typeof rawItem !== "object") {
+      return NextResponse.json({ error: "Invalid cart item." }, { status: 400 });
+    }
+
+    const item = rawItem as Partial<IncomingItem>;
     if (
-      !item ||
       typeof item.id !== "string" ||
       !item.id.trim() ||
       !Number.isInteger(item.quantity) ||
-      item.quantity < 1 ||
-      item.quantity > 99
+      (item.quantity as number) < 1 ||
+      (item.quantity as number) > 99
     ) {
       return NextResponse.json(
         { error: "Each cart item needs a valid product and quantity (1–99)." },
@@ -61,10 +72,27 @@ export async function POST(request: NextRequest) {
     }
 
     const unitAmount = Math.round(product.price * 100);
-    subtotalCents += unitAmount * item.quantity;
+    if (!Number.isSafeInteger(unitAmount) || unitAmount <= 0) {
+      return NextResponse.json(
+        { error: "A product has an invalid price." },
+        { status: 400 }
+      );
+    }
+
+    subtotalCents += unitAmount * (item.quantity as number);
+    // Leave room for the maximum fixed shipping fee in Stripe's amount limit.
+    if (
+      !Number.isSafeInteger(subtotalCents) ||
+      subtotalCents > MAX_CART_SUBTOTAL_CENTS
+    ) {
+      return NextResponse.json(
+        { error: "Cart total exceeds the payment limit." },
+        { status: 400 }
+      );
+    }
 
     lineItems.push({
-      quantity: item.quantity,
+      quantity: item.quantity as number,
       price_data: {
         currency: "usd",
         unit_amount: unitAmount,
