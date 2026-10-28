@@ -40,7 +40,7 @@ export default function CartPage() {
                   fill
                   sizes="96px"
                   className="object-cover"
-                quality={70}
+                  quality={70}
                 />
               </div>
               <div className="flex flex-1 flex-col justify-between">
