@@ -33,7 +33,7 @@ export default async function ProductDetailPage({
             priority
             sizes="(max-width: 768px) 100vw, 50vw"
             className="object-cover"
-          quality={70}
+            quality={70}
           />
         </div>
 
