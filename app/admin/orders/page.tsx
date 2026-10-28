@@ -14,7 +14,7 @@ type Order = {
 };
 
 export default async function AdminOrdersPage() {
-  const supabase = createClient();
+  const supabase = await createClient();
   let orders: Order[] = [];
 
   if (supabase) {
