@@ -21,7 +21,7 @@ export async function createProduct(
   _prev: ActionState,
   formData: FormData
 ): Promise<ActionState> {
-  const supabase = createClient();
+  const supabase = await createClient();
   if (!supabase) return { error: "Database not configured." };
 
   const values = parseForm(formData);
