@@ -50,6 +50,8 @@ In the Supabase **SQL Editor**, run these two files (in order):
 1. [`supabase/schema.sql`](./supabase/schema.sql) — products, profiles, RLS, seed data, and the new-user trigger.
 2. [`supabase/orders.sql`](./supabase/orders.sql) — orders table + RLS.
 
+If this Supabase project already had the schema applied before the security hardening, also run [`supabase/migrations/20261028000000_lock_profile_admin.sql`](./supabase/migrations/20261028000000_lock_profile_admin.sql). It prevents users from changing their own `is_admin` flag while preserving profile-name updates.
+
 Then make yourself an admin (after signing up in the app):
 
 ```sql
