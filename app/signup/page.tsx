@@ -69,7 +69,7 @@ export default function SignupPage() {
     <div className="container-x flex justify-center py-20">
       <div className="w-full max-w-md">
         <h1 className="font-serif text-4xl font-bold">Create account</h1>
-        <p className="mt-2 text-ink/60">Join Atelier in seconds.</p>
+        <p className="mt-2 text-ink/60">Join YBG Garments in seconds.</p>
 
         {!supabase && (
           <p className="mt-6 rounded-xl bg-sand p-4 text-sm text-ink/70">
